@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDataContext } from "../context/DataContext";
-import { filterMultipleRanges } from "../utils/helper";
+import { filterModelsMultipleRanges } from "../utils/helper";
 
 export function useDataTables() {
   const [selectedOption, setSelectedOption] = useState("Current");
@@ -9,22 +9,22 @@ export function useDataTables() {
   };
 
   const {
-    initialData,
-    data,
-    chartData,
+    initialTestData,
+    testData,
+    chartTestData,
     toggle,
     isFilterEnabled,
     excludedRanges,
   } = useDataContext();
 
-  const tableData = toggle ? chartData : data;
+  const tableData = toggle ? chartTestData : testData;
 
   const dataframes = {
     Current: tableData,
     Excluded: isFilterEnabled
-      ? data
-      : filterMultipleRanges(excludedRanges, data),
-    Full: initialData,
+      ? testData
+      : filterModelsMultipleRanges(excludedRanges, testData),
+    Full: initialTestData,
   };
 
   return {

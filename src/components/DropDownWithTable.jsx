@@ -1,5 +1,6 @@
 import { Button, Select, Table, Tooltip } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
+import "./DropdownWithTable.css";
 
 const { Option } = Select;
 
@@ -8,29 +9,83 @@ const DropdownWithTable = ({
   handleSelectChange,
   dataframes,
 }) => {
-  const dataSource = dataframes[selectedOption].date
-    .map((_, index) =>
-      Object.keys(dataframes[selectedOption]).reduce((acc, key) => {
-        acc[key] = dataframes[selectedOption][key][index]; // Assign corresponding values for each column
-        acc.key = index; // Ensure each row has a unique key
-        return acc;
-      }, {})
-    )
-    .filter((row) => row.profit_total !== null);
+  const dataSource = [];
 
-  const columns = Object.keys(dataframes["Current"]).map((key) => ({
-    title:
-      key.replace(/_/g, " ").charAt(0).toUpperCase() +
-      key.replace(/_/g, " ").slice(1),
-    dataIndex: key, // The key becomes the dataIndex
-    key, // Unique key for each column
-    width: 100, // You can adjust the width or remove it
-    render: (text) => (
-      <div style={{ fontSize: "12px" }}>
-        {typeof text === "number" ? text.toFixed(2) : text}
-      </div>
-    ),
-  }));
+  // Loop through each model and construct the data source
+  Object.keys(dataframes[selectedOption]).forEach((modelName) => {
+    const modelData = dataframes[selectedOption][modelName];
+
+    if (modelData && modelData.date) {
+      modelData.date.forEach((_, index) => {
+        const row = {
+          key: `${modelName}-${index}`, // Unique key for each row (modelName + index)
+          model_name: modelName, // Add model name for identification
+        };
+
+        // Add each column value for the current row (index)
+        Object.keys(modelData).forEach((columnKey) => {
+          row[columnKey] = modelData[columnKey][index];
+        });
+
+        dataSource.push(row); // Add the row to the data source
+      });
+    } else {
+      console.warn(`No data found for model: ${modelName}`); // Log a warning if model data is missing
+    }
+  });
+
+  // If dataSource is empty, log a message
+  if (dataSource.length === 0) {
+    console.error(
+      "Data source is empty. Please check the structure of the dataframes."
+    );
+  }
+
+  // Create columns dynamically from the keys of the first model
+  const columns = [
+    {
+      title: "Model Name",
+      dataIndex: "model_name",
+      key: "model_name",
+      width: 100,
+    },
+    {
+      title: "Date",
+      dataIndex: "date",
+      key: "date",
+      width: 100,
+    },
+    ...Object.keys(
+      dataframes[selectedOption][Object.keys(dataframes[selectedOption])[0]] ||
+        {}
+    )
+      .map((key) => {
+        // Exclude 'color' from columns
+        if (key !== "color") {
+          return {
+            title:
+              key.replace(/_/g, " ").charAt(0).toUpperCase() +
+              key.replace(/_/g, " ").slice(1), // Capitalize and replace underscores with spaces
+            dataIndex: key, // The key becomes the dataIndex
+            key, // Unique key for each column
+            width: 100, // You can adjust the width or remove it
+            render: (text) => (
+              <div style={{ fontSize: "12px" }}>
+                {typeof text === "number" ? text.toFixed(2) : text}{" "}
+                {/* Format numbers */}
+              </div>
+            ),
+          };
+        }
+        return null; // Return null if it's the 'color' column
+      })
+      .filter((col) => col !== null), // Remove null columns
+  ];
+
+  const rowClassName = (record) =>
+    "m" +
+      dataframes[selectedOption][record.model_name].color[0]?.substring(1) ||
+    "red"; // Default to white if model not found
 
   const downloadCSV = () => {
     const headers = columns.map((col) => col.title).join(",") + "\n"; // Create CSV headers
@@ -82,8 +137,9 @@ const DropdownWithTable = ({
         columns={columns}
         dataSource={dataSource}
         pagination={false}
-        scroll={{ x: 500, y: 200 }}
+        scroll={{ x: 500, y: 100 }}
         bordered
+        rowClassName={rowClassName}
       />
     </div>
   );

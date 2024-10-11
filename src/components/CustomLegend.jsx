@@ -2,7 +2,7 @@ import { Select } from "antd";
 import { Option } from "antd/es/mentions";
 import { useDataContext } from "../context/DataContext";
 
-function CustomLegend() {
+function CustomLegend({ left }) {
   const { traceVisibility, setTraceVisibility } = useDataContext();
 
   const transformer = {
@@ -24,7 +24,7 @@ function CustomLegend() {
       style={{
         position: "absolute",
         top: "10px",
-        left: "50%",
+        left: left ? left : "40%",
         transform: "translateX(-50%)",
         zIndex: 1000,
         width: "30%",

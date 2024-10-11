@@ -1,33 +1,28 @@
 import { useRef, useState } from "react";
-import { filterObjectByDateRange } from "../utils/helper";
+import { filterModelsByDateRange } from "../utils/helper";
 import dayjs from "dayjs";
 import { useDataContext } from "../context/DataContext";
 import toast from "react-hot-toast";
 
-export function useRelayout(baseLayout, baseData, setChartData) {
+export function useTestRelayout(baseLayout, baseData, setChartData) {
   const layoutRef = useRef(baseLayout);
 
-  const { data, setToggle, traceVisibility, setTraceVisibility } =
-    useDataContext();
-  const handleLegendClick = (event) => {
-    // const traceIndex = event.curveNumber; // Get the index of the clicked trace
-    // const newVisibility = [...traceVisibility];
-    // newVisibility[traceIndex] = !newVisibility[traceIndex]; // Toggle visibility
-    // setTraceVisibility(newVisibility); // Update state
-    // return false; // Prevent Plotly's default legend toggle behavior
-
-    const traceIndex = event.curveNumber; // Get the index of the clicked trace
-    // Create a new visibility array where only the clicked trace is visible
-    const newVisibility = traceVisibility.map(
-      (_, index) => index === traceIndex
-    );
-
-    setTraceVisibility(newVisibility);
-
-    return false;
-  };
+  const { testData, setToggle } = useDataContext();
 
   const [chartLayout, setChartLayout] = useState(null);
+
+  const modelsName = Object.keys(testData);
+  const trueArray = new Array(modelsName.length).fill(true);
+
+  const [legendVisibility, setLegendVisibility] = useState(trueArray);
+
+  const handleLegendClick = (event) => {
+    const traceIndex = event.curveNumber; // Get the index of the clicked trace
+    const newVisibility = [...legendVisibility];
+    newVisibility[traceIndex] = !newVisibility[traceIndex]; // Toggle visibility
+    setLegendVisibility(newVisibility); // Update state
+    return false; // Prevent Plotly's default legend toggle behavior
+  };
 
   function onChangeLayout(layout) {
     if (
@@ -45,7 +40,11 @@ export function useRelayout(baseLayout, baseData, setChartData) {
     );
     if (
       dayjs(layout["xaxis.range[1]"]).startOf("day") >=
-      dayjs(data.date[data.date.length - 1])
+      dayjs(
+        testData[Object.keys(testData)[0]].date[
+          testData[Object.keys(testData)[0]].date.length - 1
+        ]
+      )
     ) {
       toast.error("You've reached the end of the data range.", {
         icon: "⚠️",
@@ -62,7 +61,7 @@ export function useRelayout(baseLayout, baseData, setChartData) {
       x1: dayjs(layout["xaxis.range[1]"]).startOf("day"),
     });
 
-    const filteredData = filterObjectByDateRange(
+    const filteredData = filterModelsByDateRange(
       baseData,
       dayjs(layout["xaxis.range[0]"]).startOf("day"),
       dayjs(layout["xaxis.range[1]"]).startOf("day")
@@ -71,14 +70,14 @@ export function useRelayout(baseLayout, baseData, setChartData) {
   }
 
   function handleReset() {
-    setChartData(data);
+    setChartData(testData);
     setToggle(false);
     setChartLayout(null);
   }
 
   function handleRelayout() {
     if (!chartLayout?.x0) return;
-    const filteredData = filterObjectByDateRange(
+    const filteredData = filterModelsByDateRange(
       baseData,
       chartLayout?.["x0"],
       chartLayout?.["x1"]
@@ -93,6 +92,7 @@ export function useRelayout(baseLayout, baseData, setChartData) {
     handleRelayout,
     chartLayout,
     setChartLayout,
+    legendVisibility,
     handleLegendClick,
   };
 }

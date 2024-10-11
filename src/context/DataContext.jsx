@@ -6,6 +6,9 @@ const DataContext = createContext(null);
 export function DataServiceProvider({ children }) {
   const requestData = postData;
   const [initialData, setInitialData] = useState({});
+  const [initialTestData, setInitialTestData] = useState({});
+  const [testData, setTestData] = useState({});
+  const [chartTestData, setChartTestData] = useState({});
   const [error, setError] = useState(null);
   const [data, setData] = useState({});
   const [chartData, setChartData] = useState({});
@@ -14,8 +17,6 @@ export function DataServiceProvider({ children }) {
   const [excludedRanges, setExcludedRanges] = useState([]);
   const [toggle, setToggle] = useState(false);
   const [traceVisibility, setTraceVisibility] = useState([false, false, true]);
-
-  console.log("excludedRanges", excludedRanges);
 
   return (
     <DataContext.Provider
@@ -39,6 +40,12 @@ export function DataServiceProvider({ children }) {
         setToggle,
         traceVisibility,
         setTraceVisibility,
+        initialTestData,
+        setInitialTestData,
+        testData,
+        setTestData,
+        chartTestData,
+        setChartTestData,
       }}
     >
       {children}

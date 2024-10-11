@@ -11,19 +11,27 @@ function Form() {
     setIsloading,
     setError,
     error,
+    setInitialTestData,
+    setTestData,
+    setChartTestData,
   } = useDataContext();
-
-  console.log("errorerrorerror", error);
 
   const onFinish = async (values) => {
     console.log("values", values);
     setIsloading(true);
-    const newData = await requestData(values, setIsloading, setError);
+    const { newData, modelsData } = await requestData(
+      values,
+      setIsloading,
+      setError
+    );
     setInitialData(newData);
     setData(newData);
     setChartData(newData);
     setIsloading(false);
     setError(null);
+    setInitialTestData(modelsData);
+    setTestData(modelsData);
+    setChartTestData(modelsData);
   };
 
   const onFinishFailed = async (errorInfo) => {
@@ -69,12 +77,12 @@ function Form() {
       </AndForm.Item>
 
       <AndForm.Item
-        label="Model Name"
+        label="Policies List"
         name="policies"
         rules={[
           {
             required: true,
-            message: "Please input the model name!",
+            message: "Please input the list of policies!",
           },
         ]}
         style={{ marginTop: "2rem" }}

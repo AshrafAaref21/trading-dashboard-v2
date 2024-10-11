@@ -7,32 +7,37 @@ import { useDataContext } from "../context/DataContext";
 import StatisticsCard from "./StatisticsCard";
 import DropdownWithTable from "./DropDownWithTable";
 import { useDataTables } from "../hooks/useDataTables";
+import TestModels from "./TestModels";
 
 function Dashboard() {
-  const { setInitialData, setData, setChartData, setExcludedRanges } =
-    useDataContext();
+  const {
+    setInitialTestData,
+    setTestData,
+    setChartTestData,
+    setExcludedRanges,
+  } = useDataContext();
   const { selectedOption, handleSelectChange, dataframes } = useDataTables();
   return (
     <div className="dash-layout">
       <div className="dash-container">
-        <TabbedCharts />
-        <div style={{ marginTop: "1rem", height: "100%" }}>
+        {/* <TabbedCharts /> */}
+        <TestModels />
+        <div style={{ height: "100%" }}>
           <DropdownWithTable
             selectedOption={selectedOption}
             handleSelectChange={handleSelectChange}
             dataframes={dataframes}
           />
           <StatisticsCard displayData={dataframes[selectedOption]} />
-          {/* <ScrollableTable /> */}
         </div>
       </div>
       <Tooltip title="Back to form" placement="top">
         <Button
           className="dash-btn"
           onClick={() => {
-            setInitialData({});
-            setData({});
-            setChartData({});
+            setInitialTestData({});
+            setTestData({});
+            setChartTestData({});
             setExcludedRanges([]);
           }}
           shape="circle"

@@ -5,12 +5,12 @@ import Header from "./Header";
 import Layout from "./Layout";
 
 function Wrapper() {
-  const { data } = useDataContext();
+  const { testData } = useDataContext();
 
   return (
     <Layout
       Header={<Header />}
-      Content={data?.date ? <Dashboard /> : <Form />}
+      Content={Object.keys(testData).length ? <Dashboard /> : <Form />}
     />
   );
 }

@@ -1,6 +1,7 @@
 import axios from "axios";
-import { toDate } from "./helper";
+import { processDataWithMapAndFilter, toDate } from "./helper";
 import dayjs from "dayjs";
+import { SERVER_URL } from "./constants";
 
 const transformData = (arr) => {
   return arr.reduce((acc, { name, values }) => {
@@ -22,8 +23,7 @@ export default async function postData(
 ) {
   try {
     const response = await axios.post(
-      "https://quantum-zero-dev-eu8cy.ondigitalocean.app/report",
-      // "https://quantum-zero-bayfm.ondigitalocean.app/report",
+      SERVER_URL,
       {
         ...data,
         from_date: dayjs(data.dateRange[0]).format("YYYY-MM-DD"),
@@ -37,10 +37,11 @@ export default async function postData(
     );
     const cols = response.data.columns;
 
+    console.log("policies", JSON.parse(data.policies));
+
     if (!transformData(cols).date.length) {
       throw Error("There's no data for this short time period.");
     }
-    console.log("transformData(cols)", transformData(cols));
 
     const newData = transformData(cols);
     newData["loss_count"] = newData.loss_count_long.map(
@@ -50,9 +51,17 @@ export default async function postData(
       (longValue, index) => longValue + newData.win_count_short[index]
     );
 
-    return newData;
+    const modelsData = processDataWithMapAndFilter(
+      newData,
+      JSON.parse(data.policies)
+      // {
+      //   startDate: dayjs(data.dateRange[0]).format("YYYY-MM-DD"),
+      //   endDate: dayjs(data.dateRange[1]).format("YYYY-MM-DD"),
+      // }
+    );
+
+    return { newData, modelsData };
   } catch (error) {
-    console.error(error);
     setIsloading(false);
     if (error.status == 500) {
       setError({

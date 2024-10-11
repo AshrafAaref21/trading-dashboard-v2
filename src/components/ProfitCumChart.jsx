@@ -14,19 +14,13 @@ function ProfitCumChart() {
     setToggle,
     isFilterEnabled,
     excludedRanges,
+    traceVisibility,
   } = useDataContext();
 
-  const {
-    onChangeLayout,
-    handleReset,
-    chartLayout,
-    traceVisibility,
-    handleLegendClick,
-  } = useRelayout({}, data, setChartData);
+  const { onChangeLayout, handleReset, chartLayout, handleLegendClick } =
+    useRelayout({}, data, setChartData);
 
   const toggleData = toggle ? chartData : data;
-
-  console.log("excludedRanges", excludedRanges);
 
   const transformedData = [
     {

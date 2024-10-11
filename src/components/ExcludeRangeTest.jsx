@@ -1,9 +1,9 @@
-import dayjs from "dayjs";
-import { useDataContext } from "../context/DataContext";
 import { Button, Checkbox, Slider } from "antd";
-import { useExcludeFilter } from "../hooks/useExcludeFilter";
+import { useDataContext } from "../context/DataContext";
+import dayjs from "dayjs";
+import { useExcludeFilterTest } from "../hooks/useExcludeFilterTest";
 
-function ExcludeRange() {
+function ExcludeRangeTest() {
   const {
     data,
     chartData,
@@ -25,7 +25,7 @@ function ExcludeRange() {
     handleSliderChange,
     handleClickFilter,
     handleResetExcluding,
-  } = useExcludeFilter();
+  } = useExcludeFilterTest();
 
   const handleCheckboxChange = (e) => {
     setIsFilterEnabled(e.target.checked);
@@ -99,4 +99,4 @@ function ExcludeRange() {
   );
 }
 
-export default ExcludeRange;
+export default ExcludeRangeTest;

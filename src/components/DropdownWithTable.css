@@ -1,0 +1,29 @@
+.m4CAF50 {
+  background-color: #4caf50 !important;
+}
+.m2196F3 {
+  background-color: #2196f3;
+}
+.mFF9800 {
+  background-color: #ff9800;
+}
+.m9C27B0 {
+  background-color: #9c27b0;
+}
+.mF44336 {
+  background-color: #f44336;
+}
+.mBDBDBD {
+  background-color: #bdbdbd;
+}
+
+table:hover,
+tr:hover,
+thead:hover {
+  background: auto !important;
+  filter: brightness(1.05);
+}
+
+.ant-table-tbody > tr.ant-table-row:hover > td {
+  background: inherit !important;
+}
