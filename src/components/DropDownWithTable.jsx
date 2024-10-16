@@ -43,18 +43,18 @@ const DropdownWithTable = ({
 
   // Create columns dynamically from the keys of the first model
   const columns = [
-    {
-      title: "Model Name",
-      dataIndex: "model_name",
-      key: "model_name",
-      width: 100,
-    },
-    {
-      title: "Date",
-      dataIndex: "date",
-      key: "date",
-      width: 100,
-    },
+    // {
+    //   title: "Model Name",
+    //   dataIndex: "model_name",
+    //   key: "model_name",
+    //   width: 100,
+    // },
+    // {
+    //   title: "Date",
+    //   dataIndex: "date",
+    //   key: "date",
+    //   width: 100,
+    // },
     ...Object.keys(
       dataframes[selectedOption][Object.keys(dataframes[selectedOption])[0]] ||
         {}
