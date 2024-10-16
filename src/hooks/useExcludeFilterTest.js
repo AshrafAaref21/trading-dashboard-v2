@@ -28,8 +28,6 @@ export function useExcludeFilterTest() {
 
   const [range, setRange] = useState([startDate, endDate]);
 
-  console.log("excludedRanges", excludedRanges);
-
   const handleSliderChange = (values) => {
     setRange(values);
   };
@@ -74,7 +72,7 @@ export function useExcludeFilterTest() {
       // Store the filtered data for the current model
       newChartData[modelKey] = filteredModelData;
     });
-
+    setChartTestData(newChartData);
     const newData = {};
 
     // Initialize newData structure for each model

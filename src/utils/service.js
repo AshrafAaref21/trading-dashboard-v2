@@ -59,6 +59,8 @@ export default async function postData(
       //   endDate: dayjs(data.dateRange[1]).format("YYYY-MM-DD"),
       // }
     );
+    console.log("cols", cols);
+    console.log("modelsData", modelsData);
 
     return { newData, modelsData };
   } catch (error) {

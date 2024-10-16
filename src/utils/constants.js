@@ -7,6 +7,21 @@ const MODEL_COLORS = [
   "#BDBDBD", // Grey
 ];
 
-const SERVER_URL = "https://quantum-zero-3jgsl.ondigitalocean.app/report";
+const SERVER_URL = "https://quantum-zero-dev-eu8cy.ondigitalocean.app/report";
+
+// const colors_hex = [
+//   "#0000FF",
+//   "#008000",
+//   "#FF0000",
+//   "#00FFFF",
+//   "#FFFF00",
+//   "#000000",
+//   "#FFFFFF",
+//   "#FFE4C4",
+//   "#FF7F50",
+//   "#000080",
+//   "#FA8072",
+//   "#D2B48C",
+// ];
 
 export { MODEL_COLORS, SERVER_URL };

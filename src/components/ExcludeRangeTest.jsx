@@ -5,8 +5,8 @@ import { useExcludeFilterTest } from "../hooks/useExcludeFilterTest";
 
 function ExcludeRangeTest() {
   const {
-    data,
-    chartData,
+    testData,
+    chartTestData,
     toggle,
     isFilterEnabled,
     setIsFilterEnabled,
@@ -14,10 +14,16 @@ function ExcludeRangeTest() {
     setExcludedRanges,
   } = useDataContext();
 
-  const targetData = toggle ? chartData : data;
+  const targetData = toggle ? chartTestData : testData;
 
-  const startDate = dayjs(targetData.date[0]).unix();
-  const endDate = dayjs(targetData.date[targetData.date.length - 1]).unix();
+  const startDate = dayjs(
+    targetData[Object.keys(targetData)[0]].date[0]
+  ).unix();
+  const endDate = dayjs(
+    targetData[Object.keys(targetData)[0]].date[
+      targetData[Object.keys(targetData)[0]].date.length - 1
+    ]
+  ).unix();
 
   const {
     range,

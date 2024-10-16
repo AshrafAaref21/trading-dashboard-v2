@@ -164,19 +164,24 @@ export function processDataWithMapAndFilter(response, modelNames) {
     return { modelName, totalProfit };
   });
 
+  console.log("modelResults before sort", modelResults);
   // Sort models by total profit in descending order
   modelProfits.sort((a, b) => b.totalProfit - a.totalProfit);
 
+  let newModelsObj = {};
   // Assign colors: First 5 models get colors from the array, rest get grey
   modelProfits.forEach((model, index) => {
+    console.log(model, index);
     const color =
       index < 5 ? MODEL_COLORS[index] : MODEL_COLORS[MODEL_COLORS.length - 1]; // First 5 get colors, rest get grey
     modelResults[model.modelName].color = new Array(
       modelResults[Object.keys(modelResults)[0]].date.length
     ).fill(color); // Properly assign the color as a string
+
+    newModelsObj[model.modelName] = modelResults[model.modelName];
   });
 
-  return modelResults;
+  return newModelsObj;
 }
 
 export function transformToChartData(originalData, legend) {
