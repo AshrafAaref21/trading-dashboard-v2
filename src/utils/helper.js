@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 
-import { MODEL_COLORS } from "./constants";
+import { MODEL_COLORS, NUMBER_OF_ALLOWED_COLORS } from "./constants";
 // Extend dayjs with the plugins
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -130,29 +130,16 @@ export function processDataWithMapAndFilter(response, modelNames) {
     });
   });
 
-  // Track the current model index and the number of entries added
-  let currentModelIndex = 0;
-  let modelEntryCount = 0; // Counter for how many entries we've seen for the current model
-  const totalEntriesPerModel = Math.floor(
-    response.date.length / modelNames.length
-  ); // Average number of entries per model
-
   // Go through each entry in the response
-  response.date.forEach((date, index) => {
-    // Check if we need to switch models based on the number of entries
-    if (modelEntryCount >= totalEntriesPerModel) {
-      currentModelIndex++; // Move to the next model
-      modelEntryCount = 0; // Reset the counter for the new model
+  response.policy.forEach((policy, index) => {
+    const modelName = policy; // Use the policy as the model name
+
+    if (modelNames.includes(modelName)) {
+      // Append data to the corresponding model
+      Object.keys(response).forEach((key) => {
+        modelResults[modelName][key].push(response[key][index]);
+      });
     }
-
-    // Append data to the current model
-    Object.keys(response).forEach((key) => {
-      modelResults[modelNames[currentModelIndex]][key].push(
-        response[key][index]
-      );
-    });
-
-    modelEntryCount++; // Increment the entry count for the current model
   });
 
   // Calculate total profit for each model and store it in the modelResults
@@ -164,16 +151,16 @@ export function processDataWithMapAndFilter(response, modelNames) {
     return { modelName, totalProfit };
   });
 
-  console.log("modelResults before sort", modelResults);
   // Sort models by total profit in descending order
   modelProfits.sort((a, b) => b.totalProfit - a.totalProfit);
 
   let newModelsObj = {};
   // Assign colors: First 5 models get colors from the array, rest get grey
   modelProfits.forEach((model, index) => {
-    console.log(model, index);
     const color =
-      index < 5 ? MODEL_COLORS[index] : MODEL_COLORS[MODEL_COLORS.length - 1]; // First 5 get colors, rest get grey
+      index < NUMBER_OF_ALLOWED_COLORS
+        ? MODEL_COLORS[index]
+        : MODEL_COLORS[MODEL_COLORS.length - 1]; // First 5 get colors, rest get grey
     modelResults[model.modelName].color = new Array(
       modelResults[Object.keys(modelResults)[0]].date.length
     ).fill(color); // Properly assign the color as a string

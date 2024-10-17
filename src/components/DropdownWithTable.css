@@ -17,6 +17,17 @@
   background-color: #bdbdbd;
 }
 
+.table-header {
+  cursor: pointer;
+  text-align: center;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.table-header:hover {
+  color: #4a4a4a; /* Soft grey on hover */
+  transform: scale(1.5); /* Slight zoom effect */
+}
+
 table:hover,
 tr:hover,
 thead:hover {

@@ -1,6 +1,7 @@
 import { DollarOutlined, ThunderboltOutlined } from "@ant-design/icons";
-import { Card, Col, Progress, Row, Statistic, Table, Tooltip } from "antd";
+import { Table, Tooltip } from "antd";
 import { useDataContext } from "../context/DataContext";
+import SortHeader from "./SortHeader";
 
 function StatisticsCard({ displayData }) {
   const { traceVisibility } = useDataContext();
@@ -53,7 +54,7 @@ function StatisticsCard({ displayData }) {
       key: "modelName",
     },
     {
-      title: "Total Profit",
+      title: <SortHeader title="Total Profit" />,
       dataIndex: "totalProfit",
       key: "totalProfit",
       render: (text) => (
@@ -64,7 +65,8 @@ function StatisticsCard({ displayData }) {
       ),
     },
     {
-      title: "Profit per MWh",
+      title: <SortHeader title="Profit per MWh" />,
+
       dataIndex: "profitPerMWh",
       key: "profitPerMWh",
       render: (text) => (
@@ -77,7 +79,7 @@ function StatisticsCard({ displayData }) {
       ),
     },
     {
-      title: "Win Percentage",
+      title: <SortHeader title="Win Percentage" />,
       dataIndex: "winPercentage",
       key: "winPercentage",
       render: (text) => (
